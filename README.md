@@ -34,23 +34,143 @@ From the HDL code given formulate the correct code  to divert the traffic to pa
 
 **Procedure**
 
+
 1.	Type the program in Quartus software.
 2.	Compile and run the program.
 3.	Generate the RTL schematic and save the logic diagram.
 4.	Create nodes for inputs and outputs to generate the timing diagram.
 5.	For different input combinations generate the timing diagram
    
-**Program:**
+**Program :**
+```
 
 /* Program to implement the given logic function and to verify its operations in quartus using Verilog programming. 
+module TrafficLightController(
+    input clk,
+    output reg red1,
+    output reg yellow1,
+    output reg green1,
+    output reg red2,
+    output reg yellow2,
+    output reg green2,
+    output reg red3,
+    output reg yellow3,
+    output reg green3
+);
 
-Developed by: RegisterNumber:*/
+// State machine definition
+parameter S_IDLE = 2'b00;
+parameter S_ROAD1 = 2'b01;
+parameter S_ROAD2 = 2'b10;
+parameter S_ROAD3 = 2'b11;
 
-**RTL Schematic**
+reg [1:0] state;
+reg [3:0] count;
 
-**Output Timing Waveform**
+always @(posedge clk) begin
+    // State transition
+    case(state)
+        S_IDLE: begin
+            count <= count + 1;
+            if (count == 5) begin
+                state <= S_ROAD1;
+                count <= 0;
+            end
+        end
+        S_ROAD1: begin
+            count <= count + 1;
+            if (count == 5) begin
+                state <= S_ROAD2;
+                count <= 0;
+            end
+        end
+        S_ROAD2: begin
+            count <= count + 1;
+            if (count == 5) begin
+                state <= S_ROAD3;
+                count <= 0;
+            end
+        end
+        S_ROAD3: begin
+            count <= count + 1;
+            if (count == 5) begin
+                state <= S_IDLE;
+                count <= 0;
+            end
+        end
+    endcase
+end
 
-**Result:**
+// Traffic light control logic
+always @(*) begin
+    case(state)
+        S_IDLE: begin
+            red1 = 1;
+            yellow1 = (count >= 1 && count <= 4) ? 1 : 0;
+            green1 = 0;
+            red2 = 1;
+            yellow2 = 0;
+            green2 = 0;
+            red3 = 1;
+            yellow3 = 0;
+            green3 = 0;
+        end
+        S_ROAD1: begin
+            red1 = 0;
+            yellow1 = (count >= 6 && count <= 9) ? 1 : 0;
+            green1 = (count >= 1 && count <= 5) ? 1 : 0;
+            red2 = 1;
+            yellow2 = (count >= 6 && count <= 9) ? 1 : 0;
+            green2 = 0;
+            red3 = 1;
+            yellow3 = 0;
+            green3 = 0;
+        end
+        S_ROAD2: begin
+            red1 = 1;
+            yellow1 = 0;
+            green1 = 0;
+            red2 = 0;
+            yellow2 = (count >= 1 && count <= 4) ? 1 : 0;
+            green2 = (count >= 6 && count <= 9) ? 1 : 0;
+            red3 = 1;
+            yellow3 = (count >= 6 && count <= 9) ? 1 : 0;
+            green3 = 0;
+        end
+        S_ROAD3: begin
+            red1 = 1;
+            yellow1 = 0;
+            green1 = 0;
+            red2 = 1;
+            yellow2 = 0;
+            green2 = 0;
+            red3 = 0;
+            yellow3 = (count >= 1 && count <= 4) ? 1 : 0;
+            green3 = (count >= 6 && count <= 9) ? 1 : 0;
+        end
+    endcase
+end
+
+endmodule
+```
+
+***Developed by: Naveen R**
+
+***RegisterNumber: 24900811**
+
+**RTL Schematic :**
+
+![image](https://github.com/user-attachments/assets/3f47a1df-871d-4ac4-ad38-9088b81d67b5)
+
+
+**Output Timing Waveform :**
+
+![image](https://github.com/user-attachments/assets/fc4485ca-db1a-47b8-8100-47c40259b43f)
+
+
+**Result :**
+
+Thus,the simulation and the design of a Traffic Light controller is done successfully.
 
 
 
